@@ -85,8 +85,9 @@ jobs:
         env:
           JENKINS_USER: ${{ secrets.JENKINS_USER }}
           JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
+          JENKINS_URL: "http://35.154.11.247:8080"
         run: |
-          curl -X POST "http://35.154.11.247:8080/job/Deploy-Tomcat-App/buildWithParameters" \
+          curl -X POST "$JENKINS_URL/job/Deploy-Tomcat-App/buildWithParameters" \
             --user "$JENKINS_USER:$JENKINS_TOKEN" \
             --data-urlencode WAR_URL="https://github.com/VarunWarudkar/insured-java-app/releases/download/hello-tomcat/hello-tomcat-1.0-SNAPSHOT.war.war" 
  
