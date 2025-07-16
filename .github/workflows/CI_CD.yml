@@ -18,6 +18,7 @@ jobs:
     steps:
       - name: Debug working directory
         run: |
+          cd ..
           echo "PWD: $(pwd)"
           ls -la    
           
