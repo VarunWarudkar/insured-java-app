@@ -82,6 +82,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Jenkins Job
+        env:
+          JENKINS_USER: ${{ secrets.JENKINS_USER }}
+          JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
         run: |
           curl -X POST "http://35.154.11.247:8080/job/Deploy-Tomcat-App/buildWithParameters" \
             --user "$JENKINS_USER:$JENKINS_TOKEN" \
@@ -89,6 +92,8 @@ jobs:
  
 
       - name: Check deployment status (optional)
+        env:
+          Tomcat_URL: "http://35.154.11.247:8000"
         run: |
           echo "Waiting for deployment to complete..."
           sleep 30
