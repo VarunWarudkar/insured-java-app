@@ -22,13 +22,22 @@ jobs:
               java-version: '17'
               cache: maven	
 
+    build:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Build WAR
+            run: mvn -f /home/runner/work/insured-java-app/pom.xml clean package
+
+          - name: Upload WAR as Artifact
+            uses: actions/upload-artifact@v4
+            with:
+              name: war-artifact
+              path: target/*.war
+              
     sonar:
         #if: startsWith(github.head_ref, 'feature/')  # Run only if PR is from `feature/**`
         runs-on: ubuntu-latest
         steps:
-
-          - name: Build and Test
-            run: mvn clean verify
           
           - name: Run Tests
             run: mvn verify jacoco:report
@@ -44,17 +53,7 @@ jobs:
                 -Dsonar.host.url=$SONAR_HOST_URL \
                 -Dsonar.login=$SONAR_TOKEN
             
-    build:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Build WAR
-            run: mvn -f path/to/pom.xmlclean package
 
-          - name: Upload WAR as Artifact
-            uses: actions/upload-artifact@v4
-            with:
-              name: war-artifact
-              path: target/*.war
           
     deploy:
         needs: build
