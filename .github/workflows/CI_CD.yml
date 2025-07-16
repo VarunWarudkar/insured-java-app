@@ -11,13 +11,14 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run: |
-        cd /home/runner/work/insured-java-app/insured-java-app
+    #defaults:
+    #  run: |
+    #    cd /home/runner/work/insured-java-app/insured-java-app
 
     steps:
       - name: Debug working directory
         run: |
+          cd /home/runner/work/insured-java-app/insured-java-app
           echo "PWD: $(pwd)"
           ls -la    
           
@@ -48,6 +49,11 @@ jobs:
     #    working-directory: insured-java-app
 
     steps:
+      - name: Debug working directory
+        run: |
+          cd /home/runner/work/insured-java-app/insured-java-app
+          echo "PWD: $(pwd)"
+          ls -la    
       - name: Checkout repository
         uses: actions/checkout@v4
 
