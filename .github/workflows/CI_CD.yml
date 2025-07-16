@@ -1,91 +1,4 @@
 name: CI + Trigger Jenkins CD
-
-on:
-  push:
-    branches: ["main", "feature/**"]
-  pull_request:
-    branches: ["**"]
-  workflow_dispatch:
-
-jobs:
-
-  build:
-    runs-on: ubuntu-latest
-    #defaults:
-    #  run: |
-    #    cd /home/runner/work/insured-java-app/insured-java-app
-
-    steps:
-      - name: Debug working directory
-        run: |
-          cd /home/runner/work/insured-java-app/insured-java-app
-          echo "PWD: $(pwd)"
-          ls -la    
-          
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: maven
-
-      - name: Build WAR
-        run: mvn clean package
-
-      - name: Upload WAR as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: war-artifact
-          path: insured-java-app/target/*.war
-
-  sonar:
-    needs: build
-    runs-on: ubuntu-latest
-    #defaults:
-    #  run:
-    #    working-directory: insured-java-app
-
-    steps:
-      - name: Debug working directory
-        run: |
-          cd /home/runner/work/insured-java-app/insured-java-app
-          echo "PWD: $(pwd)"
-          ls -la    
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: maven
-
-      - name: Run Tests
-        run: mvn verify jacoco:report
-
-      - name: Run SonarQube Scanner
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: "https://sonarcloud.io"
-        run: |
-          mvn sonar:sonar \
-            -Dsonar.projectKey=varun-sonar_demo \
-            -Dsonar.organization=varun-sonar \
-            -Dsonar.host.url=$SONAR_HOST_URL \
-            -Dsonar.login=$SONAR_TOKEN
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Jenkins Job
-        run: |
-          curl -X POST "http://name: CI + Trigger Jenkins CD
-
 on:
   push:
     branches: ["main", "feature/**"]
@@ -172,4 +85,11 @@ jobs:
         run: |
           curl -X POST "http://35.154.11.247:8080/job/Deploy-Tomcat-App/buildWithParameters" \
             --user "$JENKINS_USER:$JENKINS_TOKEN" \
-            --data-urlencode WAR_URL="https://github.com/VarunWarudkar/insured-java-app/releases/download/**/*.war"
+            --data-urlencode WAR_URL="https://github.com/VarunWarudkar/insured-java-app/releases/download/**/*.war" 
+ 
+
+      - name: Check deployment status (optional)
+        run: |
+          echo "Waiting for deployment to complete..."
+          sleep 30
+          curl -I $Tomcat_URL/
