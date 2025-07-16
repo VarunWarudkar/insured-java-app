@@ -1,30 +1,41 @@
-name: Java CI Build
+name: Java CI/CD with Jenkins
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["**"]  # Triggers on any branch
   pull_request:
-    branches: [ "main" ]
+    branches: ["**"]
 
 jobs:
   build:
+    name: Build WAR
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Set up Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'  # adjust based on your project
+      - name: Set Up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'  # Adjust based on your project
 
-    - name: Build with Maven
-      run: mvn clean package
+      - name: Build WAR with Maven
+        run: mvn clean package
 
-    - name: Archive WAR file
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-war
-        path: target/*.war
+      - name: Upload WAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: war-artifact
+          path: target/*.war
+
+  deploy:
+    name: Trigger Jenkins Deployment
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Jenkins Job
+        run: |
+          curl -X POST "http://${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }}@${{ secrets.JENKINS_URL }}/job/Deploy-Insured-App/buildWithParameters?BRANCH_NAME=${GITHUB_REF##*/}&WAR_NAME=hello-tomcat.war"
