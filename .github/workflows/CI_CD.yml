@@ -85,11 +85,11 @@ jobs:
         run: |
           curl -X POST "http://35.154.11.247:8080/job/Deploy-Tomcat-App/buildWithParameters" \
             --user "$JENKINS_USER:$JENKINS_TOKEN" \
-            --data-urlencode WAR_URL="https://github.com/VarunWarudkar/insured-java-app/releases/download/**/*.war" 
+            --data-urlencode WAR_URL="https://github.com/VarunWarudkar/insured-java-app/releases/download/hello-tomcat/*.war" 
  
 
       - name: Check deployment status (optional)
         run: |
           echo "Waiting for deployment to complete..."
           sleep 30
-          curl -I $Tomcat_URL/
+          curl -I $Tomcat_URL/hello-tomcat
