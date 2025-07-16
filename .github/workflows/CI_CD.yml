@@ -23,7 +23,7 @@ jobs:
               cache: maven	
 
     sonar:
-        if: startsWith(github.head_ref, 'feature/')  # Run only if PR is from `feature/**`
+        if: startsWith(github.head_ref)  # Run only if PR is from `feature/**`
         runs-on: ubuntu-latest
         steps:
 
@@ -48,7 +48,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
           - name: Build WAR
-            run: mvn clean package
+            run: mvn -f path/to/pom.xmlclean package
 
           - name: Upload WAR as Artifact
             uses: actions/upload-artifact@v4
