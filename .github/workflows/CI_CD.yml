@@ -8,11 +8,6 @@ on:
   workflow_dispatch:
 
 jobs:
-    default:
-        steps:
-          - name: Build WAR
-            run:
-                working-directory: insured-java-app
         
     checkout:
         runs-on: ubuntu-latest
