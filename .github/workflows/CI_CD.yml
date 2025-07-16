@@ -26,7 +26,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
           - name: Build WAR
-            run: mvn -f /home/runner/work/insured-java-app/pom.xml clean package
+            run: mvn clean package
+            working-directory: insured-java-app
 
           - name: Upload WAR as Artifact
             uses: actions/upload-artifact@v4
@@ -42,6 +43,7 @@ jobs:
           
           - name: Run Tests
             run: mvn verify jacoco:report
+            working-directory: insured-java-app
 
           - name: Run SonarQube Scanner
             env:
