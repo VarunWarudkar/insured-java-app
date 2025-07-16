@@ -12,13 +12,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
-      run:
-        working-directory: insured-java-app
+      run: |
+        cd /home/runner/work/insured-java-app/insured-java-app
 
     steps:
       - name: Debug working directory
         run: |
-          cd ..
           echo "PWD: $(pwd)"
           ls -la    
           
