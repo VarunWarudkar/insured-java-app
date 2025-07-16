@@ -1,0 +1,73 @@
+name: CI + Trigger Jenkins CD
+
+on:
+  push:
+    branches: ["main", "feature/**"]   # CI runs on all branches
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+jobs:
+
+	checkout:
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: maven	
+
+  sonar:
+    if: startsWith(github.head_ref, 'feature/')  # Run only if PR is from `feature/**`
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Build and Test
+        run: mvn clean verify
+      
+      - name: Run Tests
+        run: mvn verify jacoco:report
+
+      - name: Run SonarQube Scanner
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: "https://sonarcloud.io"
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.projectKey=varun-sonar_demo \
+            -Dsonar.organization=varun-sonar \
+            -Dsonar.host.url=$SONAR_HOST_URL \
+            -Dsonar.login=$SONAR_TOKEN
+            	
+  build:
+    runs-on: ubuntu-latest
+
+      - name: Build WAR
+        run: mvn clean package
+
+      - name: Upload WAR as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: war-artifact
+          path: target/*.war
+          
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Jenkins Job
+        run: |
+          curl -X POST "$JENKINS_URL/job/Deploy-Tomcat-App/buildWithParameters" \
+            --user $JENKINS_USER:$JENKINS_TOKEN \
+            --data-urlencode WAR_URL="https://github.com/VarunWarudkar/insured-java-app/releases/download/latest/*.war" \
+            --data-urlencode WAR_NAME="*.war"
+        env:
+          JENKINS_URL: ${{ secrets.JENKINS_URL }}
+          JENKINS_USER: ${{ secrets.JENKINS_USER }}
+          JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
