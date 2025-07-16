@@ -36,6 +36,7 @@ jobs:
               
     sonar:
         #if: startsWith(github.head_ref, 'feature/')  # Run only if PR is from `feature/**`
+        needs: build
         runs-on: ubuntu-latest
         steps:
           
