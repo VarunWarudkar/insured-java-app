@@ -10,6 +10,7 @@ on:
 jobs:
 
     checkout:
+        runs-on: ubuntu-latest
         steps:
           - name: Checkout repository
             uses: actions/checkout@v4
@@ -24,7 +25,6 @@ jobs:
     sonar:
         if: startsWith(github.head_ref, 'feature/')  # Run only if PR is from `feature/**`
         runs-on: ubuntu-latest
-
         steps:
 
           - name: Build and Test
@@ -59,7 +59,6 @@ jobs:
     deploy:
         needs: build
         runs-on: ubuntu-latest
-
         steps:
           - name: Trigger Jenkins Job
             run: |
