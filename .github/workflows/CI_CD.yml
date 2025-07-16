@@ -23,7 +23,7 @@ jobs:
               cache: maven	
 
     sonar:
-        if: startsWith(github.head_ref)  # Run only if PR is from `feature/**`
+        #if: startsWith(github.head_ref, 'feature/')  # Run only if PR is from `feature/**`
         runs-on: ubuntu-latest
         steps:
 
