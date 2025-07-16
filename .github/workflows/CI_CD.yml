@@ -9,8 +9,10 @@ on:
 
 jobs:
     default:
-        run:
-        working-directory: insured-java-app
+        steps:
+          - name: Build WAR
+            run:
+                working-directory: insured-java-app
         
     checkout:
         runs-on: ubuntu-latest
