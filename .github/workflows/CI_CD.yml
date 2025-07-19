@@ -39,6 +39,9 @@ jobs:
         with:
           name: war-artifact
           path: insured-java-app/target/*.war
+          
+      - name: Show WAR file path
+        run: find . -name "*.war"
 
   sonar:
     needs: build
@@ -77,23 +80,26 @@ jobs:
             -Dsonar.host.url=$SONAR_HOST_URL \
             -Dsonar.login=$SONAR_TOKEN
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Jenkins Job
-        env:
-          JENKINS_USER: ${{ secrets.JENKINS_USER }}
-          JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
-          JENKINS_URL: ${{ secrets.JENKINS_URL }}
-        run: |
-          curl -X POST "$JENKINS_URL/buildByToken/build?job=Deploy-Tomcat-App&token=$JENKINS_TOKEN"
- 
-
-      - name: Check deployment status (optional)
-        env:
-          Tomcat_URL: ${{ secrets.Tomcat_URL }}
-        run: |
-          echo "Waiting for deployment to complete..."
-          sleep 30
-          curl -I $Tomcat_URL/Deploy-Tomcat-App
+  #deploy:
+  #  needs: build
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Trigger Jenkins Job
+  #      env:
+  #        JENKINS_USER: ${{ secrets.JENKINS_USER }}
+  #        JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
+  #        JENKINS_URL: ${{ secrets.JENKINS_URL }}
+  #      run: |
+  #        curl -X POST "$JENKINS_URL/buildByToken/build?job=Deploy-Tomcat-App&token=$Job_TOKEN"
+  #        #curl -X POST "$JENKINS_URL/job/Deploy-Tomcat-App/buildWithParameters" \
+  #        #      --user $JENKINS_USER:$JENKINS_TOKEN \
+  #        #      --data-urlencode WAR_URL="https://github.com/VarunWarudkar/insured-java-app/releases/download/latest/*.war" \
+  #        #      --data-urlencode WAR_NAME="*.war"
+  #
+  #    - name: Check deployment status (optional)
+  #      env:
+  #        Tomcat_URL: ${{ secrets.Tomcat_URL }}
+  #      run: |
+  #        echo "Waiting for deployment to complete..."
+  #        sleep 30
+  #        curl -I $Tomcat_URL/Deploy-Tomcat-App
