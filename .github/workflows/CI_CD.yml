@@ -87,7 +87,7 @@ jobs:
           JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
           JENKINS_URL: ${{ secrets.JENKINS_URL }}
         run: |
-          curl -X POST "$JENKINS_URL/job/Deploy-Tomcat-App/build?token=$JENKINS_TOKEN"
+          curl -X POST "$JENKINS_URL/buildByToken/build?job=Deploy-Tomcat-App&token=$JENKINS_TOKEN"
  
 
       - name: Check deployment status (optional)
@@ -96,4 +96,4 @@ jobs:
         run: |
           echo "Waiting for deployment to complete..."
           sleep 30
-          curl -I $Tomcat_URL/hello-tomcat
+          curl -I $Tomcat_URL/Deploy-Tomcat-App
