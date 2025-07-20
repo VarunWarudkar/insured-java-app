@@ -98,6 +98,7 @@ jobs:
     steps:
       - name: Trigger Jenkins Job
         run: |
+          curl -X POST "$JENKINS_URL/buildByToken/build?job=Deploy-Tomcat-App&token=JOB_TOKEN"
           #curl -X POST "$JENKINS_URL/job/Deploy-Tomcat-App/buildWithParameters?token=$JOB_TOKEN" \
           #      --user $JENKINS_USER:$JENKINS_TOKEN \
           #      --data-urlencode "WAR_PATH=target/hello-tomcat-1.0-SNAPSHOT.war"\
@@ -105,9 +106,7 @@ jobs:
           #      --data-urlencode WAR_URL="https://github.com/VarunWarudkar/insured-java-app/releases/download/latest/*.war" \
           #      --data-urlencode WAR_NAME="*.war"
           #curl -X POST "$JENKINS_URL/job/Deploy-Tomcat-App/build?token=$JOB_TOKEN"\
-          #  --user $JENKINS_USER:$JENKINS_TOKEN \
-          curl -X POST "$JENKINS_URL/buildByToken/build?job=Deploy-Tomcat-App&token=JOB_TOKEN"
-  
+          #  --user $JENKINS_USER:$JENKINS_TOKEN \  
       - name: Check deployment status (optional)
         run: |
           echo "Waiting for deployment to complete..."
