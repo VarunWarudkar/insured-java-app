@@ -98,7 +98,7 @@ jobs:
     steps:
       - name: Trigger Jenkins Job
         run: |
-          curl -X POST "http://3.111.48.131:8080/buildByToken/build?job=Deploy-Tomcat-App&token=JOB_TOKEN"
+          curl -X POST "http://3.111.48.131:8080/buildByToken/build?job=Deploy-Tomcat-App&token=$JOB_TOKEN"
           #curl -X POST "$JENKINS_URL/job/Deploy-Tomcat-App/buildWithParameters?token=$JOB_TOKEN" \
           #      --user $JENKINS_USER:$JENKINS_TOKEN \
           #      --data-urlencode "WAR_PATH=target/hello-tomcat-1.0-SNAPSHOT.war"\
