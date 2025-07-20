@@ -1,4 +1,5 @@
 name: CI + Trigger Jenkins CD
+
 on:
   push:
     branches: ["main", "feature/**"]
@@ -38,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: war-artifact
-          path: insured-java-app/target/*.war
+          path: insured-java-app/target/*.war   
           
       - name: Show WAR file path
         run: find . -name "*.war"
@@ -68,7 +69,7 @@ jobs:
   
       - name: Run Tests
         run: mvn verify jacoco:report
-  
+
       - name: Run SonarQube Scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -83,14 +84,17 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+        
+    env:
+      JENKINS_URL: http://3.111.48.131:8080
+      TOMCAT_URL: http://3.111.48.131:8000
+      JENKINS_USER: ${{ secrets.JENKINS_USER }}
+      JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
+      JOB_TOKEN: ${{secrets.JOB_TOKEN}}
+
+    
     steps:
       - name: Trigger Jenkins Job
-        env:
-          JENKINS_USER: ${{ secrets.JENKINS_USER }}
-          JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
-          JENKINS_URL="http://3.111.48.131:8080"
-          TOMCAT_URL="http://3.111.48.131:8000"
-          JOB_TOKEN: ${{secrets.JOB_TOKEN}}
         run: |
           curl -X POST "$JENKINS_URL/job/Deploy-Tomcat-App/buildWithParameters?token=$JOB_TOKEN" \
                 --user $JENKINS_USER:$JENKINS_TOKEN \
@@ -101,8 +105,6 @@ jobs:
           #curl -X POST "$JENKINS_URL/buildByToken/build?job=Deploy-Tomcat-App&token=$JOB_TOKEN"
   
       - name: Check deployment status (optional)
-        env:
-          TOMCAT_URL="http://3.111.48.131:8000"
         run: |
           echo "Waiting for deployment to complete..."
           sleep 30
