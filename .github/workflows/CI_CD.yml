@@ -90,7 +90,7 @@ jobs:
           JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
           JENKINS_URL: ${{ secrets.JENKINS_URL }}
           TOMCAT_URL: ${{ secrets.TOMCAT_URL }}
-          JOB_TOKEN:${{secrets.JOB_TOKEN}}
+          JOB_TOKEN: ${{secrets.JOB_TOKEN}}
         run: |
           #curl -X POST "$JENKINS_URL/buildByToken/build?job=Deploy-Tomcat-App&token=$Job_TOKEN"
           curl -X POST "$JENKINS_URL/job/Deploy-Tomcat-App/buildWithParameters?token=$JOB_TOKEN" \
