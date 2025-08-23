@@ -1,13 +1,13 @@
-Working with the Apache Maven registry
+#Working with the Apache Maven registry
 You can configure Apache Maven to publish packages to GitHub Packages and to use packages stored on GitHub Packages as dependencies in a Java project.
 
 In this article
-Authenticating to GitHub Packages
-Publishing a package
-Installing a package
-Further reading
-Authenticating to GitHub Packages
-Note
+- Authenticating to GitHub Packages
+- Publishing a package
+- Installing a package
+- Further reading
+- Authenticating to GitHub Packages
+### Note
 
 GitHub Packages only supports authentication using a personal access token (classic). For more information, see Managing your personal access tokens.
 
@@ -21,7 +21,7 @@ GITHUB_TOKEN to publish packages associated with the workflow repository.
 A personal access token (classic) with at least read:packages scope to install packages associated with other private repositories (GITHUB_TOKEN can be used if the repository is granted read access to the package. See Configuring a package's access control and visibility).
 For more information about GITHUB_TOKEN used in GitHub Actions workflows, see Use GITHUB_TOKEN for authentication in workflows.
 
-Authenticating with a personal access token
+##Authenticating with a personal access token
 You must use a personal access token (classic) with the appropriate scopes to publish and install packages in GitHub Packages. For more information, see Introduction to GitHub Packages.
 
 You can authenticate to GitHub Packages with Apache Maven by editing your ~/.m2/settings.xml file to include your personal access token (classic). Create a new ~/.m2/settings.xml file if one doesn't exist.
@@ -71,6 +71,7 @@ GitHub Packages supports SNAPSHOT versions of Apache Maven. To use the GitHub Pa
   </servers>
 </settings>
 ```
+
 Publishing a package
 By default, GitHub publishes the package to an existing repository with the same name as the package. For example, GitHub will publish a package named com.example:test in a repository called OWNER/test.
 
@@ -92,7 +93,8 @@ Edit the distributionManagement element of the pom.xml file located in your pack
    </repository>
 </distributionManagement>
 ```
-Publish the package.
+
+##Publish the package.
 
 mvn deploy
 After you publish a package, you can view the package on GitHub. For more information, see Viewing packages.
